@@ -9,7 +9,9 @@
     当scan为true时，此属性生效。默认的时间间隔为1分钟。-->
 <!--debug: 当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。-->
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
+     <!-- 定义日志文件名称 -->
     <property name="appName" value="SpringBootFirstDemo"></property>
+	 <!-- 定义日志的根目录 -->
     <property name="logPath" value="D:/demoApplication/logs/"></property>
     <!-- 彩色日志格式 -->
     <property name="colorParttern" value="%d{HH:mm:ss.SSS} %contextName [%yellow(%thread)] %highlight(%-5level) %green(%logger){36} - %msg%n"></property>
@@ -22,11 +24,17 @@
              &lt;!&ndash; 此appender是为开发使用，只配置最底级别，控制台输出的日志级别是大于或等于此级别的日志信息 &ndash;&gt;
              <level>DEBUG</level>
         </filter>-->
+        	<springProfile name="!production">
+                <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            		 <level>DEBUG</level>
+             	 </filter>
+            </springProfile>
         <encoder>
             <pattern>${colorParttern}</pattern>
         </encoder>
     </appender>
  
+ 	<!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件 -->  
     <!--INFO文件-->
     <appender name="info_file" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 正在记录的日志文件的路径及文件名 -->
@@ -113,12 +121,14 @@
         <appender-ref ref="error_file" />
     </root>
  
-    <!--  <logger>用来设置某一个包或者具体的某一个类的日志打印级别、以及指定<appender> -->
-    <!-- name:用来指定受此logger约束的某一个包或者具体的某一个类 -->
-    <!-- addtivity:是否向上级logger传递打印信息。默认是true -->
-    <!--level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF
-        还有一个特俗值INHERITED或者同义词NULL，代表强制执行上级的级别
-        如果未设置此属性，那么当前logger将会继承上级的级别
+    <!-- 
+		logger主要用于存放日志对象，也可以定义日志类型、级别以及指定<appender>
+		name：表示匹配的logger类型前缀，也就是包的前半部分,用来指定受此logger约束的某一个包或者具体的某一个类
+		level：要记录的日志级别，大小写无关：，包括 TRACE < DEBUG < INFO < WARN < ERROR, ALL 和 OFF
+			       还有一个特俗值INHERITED或者同义词NULL，代表强制执行上级的级别,如果未设置此属性，那么当前logger将会继承上级的级别
+		additivity：作用在于children-logger是否使用 rootLogger配置的appender进行输出，默认是true
+		false：表示只用当前logger的appender-ref，true：
+		表示当前logger的appender-ref和rootLogger的appender-ref都有效
     -->
     <logger name="com.example.demo.mapper" level="DEBUG" additivity="false">
         <appender-ref ref="console"/>

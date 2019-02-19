@@ -64,6 +64,12 @@ spring:
 mybatis:
   #如果你配置了mapper-location，就不用配置config-location中的<mappers></mappers>中内容
   mapper-locations: classpath:mybatis/mapper/*.xml
+#日志设置
 logging:
+  level: 
+    root: debug
   config: classpath:logback-spring.xml
   path: D:/demoApplication/logs/ 
+#spring
+#  profiles
+#    active: production
