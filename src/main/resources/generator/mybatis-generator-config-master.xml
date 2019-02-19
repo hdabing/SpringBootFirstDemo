@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+        
+<generatorConfiguration>
+    <!--执行generator插件生成文件的命令： call mvn mybatis-generator:generate -e -->
+    <!--Eclipse，则右键项目，Run As:Maven build，输入mybatis-generator:generate，点击运行即可 -->
+    <!-- 引入配置文件 -->
+    <!-- <properties resource="mybatis-generator/mybatisGeneratorinit.properties"/> -->
+    
+    <!--classPathEntry:数据库的JDBC驱动,换成你自己的驱动位置 可选 -->
+    <!--<classPathEntry location="D:\generator_mybatis\mysql-connector-java-5.1.24-bin.jar" /> -->
+    
+    <!-- 一个数据库一个context -->
+    <!--defaultModelType="flat" 大数据字段，不分表 -->
+    <context id="MysqlTables" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <!-- 自动识别数据库关键字，默认false，如果设置为true，根据SqlReservedWords中定义的关键字列表；
+       	 一般保留默认值，遇到数据库关键字（Java关键字），使用columnOverride覆盖 -->
+        <property name="autoDelimitKeywords" value="true" />
+        <!-- beginningDelimiter和endingDelimiter：指明数据库的用于标记数据库对象名的符号，比如ORACLE就是双引号，MYSQL默认是`反引号； -->
+        <property name="beginningDelimiter" value="`" />
+        <property name="endingDelimiter" value="`" />
+ 
+ 		<!-- Mapper代理开发模式不需要编写实现类，减少了代码量，同时是面向接口编程，推荐使用此种方式 -->
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="tk.mybatis.mapper.common.Mapper,tk.mybatis.mapper.common.MySqlMapper" />
+        </plugin>
+        
+        <!-- 注释 -->
+        <commentGenerator >
+            <property name="suppressAllComments" value="false"/><!-- 是否取消注释 -->
+            <property name="suppressDate" value="true" /> <!-- 是否生成注释代时间戳-->
+        </commentGenerator>
+        
+        <!-- jdbc连接 -->
+        <jdbcConnection 
+        	driverClass="com.mysql.jdbc.Driver" 
+        	connectionURL="jdbc:mysql://127.0.0.1:3306/SpringBootFirstDemo?useUnicode=true&amp;characterEncoding=utf-8"
+        	userId="root" password="123456" />
+        	
+        <!-- 类型转换 -->
+        <javaTypeResolver>
+            <!-- 是否使用bigDecimal， 默认为false，会自动转换decimal、numeric字段 -->
+            <!-- 默认转换规则:精度>0或长度>18-bigDecimal -->
+            <property name="forceBigDecimals" value="true"/>
+        </javaTypeResolver>
+        
+        <!-- 生成实体类地址 -->
+        <javaModelGenerator targetPackage="com.example.demo.entity" targetProject="src/main/java/" >
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        
+        <!-- 生成xxxMapper.xml映射文件 -->
+        <sqlMapGenerator targetPackage="mybatis.mapper.system" targetProject="src/main/resources/" >
+            <property name="enableSubPackages" value="false" />
+        </sqlMapGenerator>
+        
+        <!-- 生成xxxMapper.xml映射文件对应client，也就是Dao接口 -->
+        <javaClientGenerator targetPackage="com.example.demo.mapper.system" targetProject="src/main/java/" type="XMLMAPPER" >
+            <property name="enableSubPackages" value="false" />
+        </javaClientGenerator>
+        
+        <!-- table可以有多个,每个数据库中的表都可以写一个table，tableName表示要匹配的数据库表,也可以在tableName属性中通过使用%通配符来匹配所有数据库表,只有匹配的表才会自动生成文件 -->  
+        <!-- 是否生成方法的全部缺省值都为true -->
+        <table tableName="user_info"></table>
+        <table tableName="sys_user"></table>
+        <table tableName="sys_role"></table>
+        <table tableName="sys_user_role"></table>
+        
+    </context>
+</generatorConfiguration>
